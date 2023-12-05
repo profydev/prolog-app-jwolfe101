@@ -31,6 +31,22 @@ describe("Sidebar Navigation", () => {
         .should("have.attr", "href", "/dashboard/settings");
     });
 
+    it("support button opens email app", () => {
+      const windowOpenStub = (url: string) => {
+        expect(url).to.eq(
+          `mailto:support@prolog-app.com?subject=${encodeURIComponent(
+            "Support Request:",
+          )}`, //Support%20Request%3A"
+        );
+      };
+
+      cy.window().then((window) => {
+        cy.stub(window, "open").callsFake(windowOpenStub);
+      });
+
+      cy.get("nav").contains("Support").click();
+    });
+
     it("is collapsible", () => {
       // collapse navigation
       cy.get("nav").contains("Collapse").click();
